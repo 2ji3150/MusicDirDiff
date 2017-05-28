@@ -1,13 +1,22 @@
 ﻿using MusicDirDiff.Properties;
 using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 
 namespace MusicDirDiff {
     class Program {
+        public const string log = "Musig_Log.txt";
         static void Main() {
+            //ログファイルを確認
+
+            if (!File.Exists(log)) {
+                Console.WriteLine("ログファイルが見つからないので、リセットします");
+                Settings.Default.Reset();
+                Console.WriteLine("リセットしました\n");
+            }
 
             //パスをGET
             string Mymusic = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
@@ -90,19 +99,16 @@ namespace MusicDirDiff {
         }
 
         public void Update() {
-            Console.WriteLine("更新中...");
+            Console.WriteLine("ログファイルを更新中...");
 
             //save to setting
             Settings.Default.LastSyncSize = NewSize;
             Settings.Default.Save();
-            //Append to text
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"更新時間 : {DateTime.Now}");
-            sb.AppendLine($"同期サイズ : {FileSizeHelpler.SizeSuffix(NewSize)} ({NewSize})");
-            sb.AppendLine("---------------------------------------");
-            File.AppendAllText("Musig_Log.txt", sb.ToString());
+            //Append to text           
+            File.AppendAllText(Program.log, $"{DateTime.Now} - {FileSizeHelpler.SizeSuffix(NewSize)} ({NewSize:N0} バイト)");
 
-            Console.WriteLine("更新しました...");
+            Console.WriteLine("ログファイルを更新しました...");
+            Process.Start(Program.log);
         }
     }
 }
