@@ -8,23 +8,23 @@ using System.Linq;
 namespace MusicDirDiff {
     class Program {
         public const string log = "Musig_Log.txt";
-        static void Main() {
-            //ログファイルを確認
+        static string Mymusic = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+        static string BackupDir = ConfigurationManager.AppSettings["backupdir"];
 
+        static void Main() {
+
+            //ログファイルを確認
             if (!File.Exists(log)) {
                 Console.WriteLine("ログファイルが見つからないので、リセットします");
                 Settings.Default.Reset();
                 Console.WriteLine("リセットしました\n");
             }
 
-            //パスをGET
-            string Mymusic = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-            string BackupDir = ConfigurationManager.AppSettings["backupdir"];
             //DIRオブジェクトを生成
             Dir dir_org = new Dir("オリジナル", Mymusic);
             Dir dir_backup = new Dir("バックアップ", BackupDir);
-            //SizeCheckerオブジェクトを生成
 
+            //SizeCheckerオブジェクトを生成
             if (dir_org.Isexsist && dir_backup.Isexsist) {
                 SizeChecker sc = new SizeChecker(dir_backup.Size, dir_org.Size, Settings.Default.LastSyncSize);
                 if (sc.Confirm()) sc.Update();
