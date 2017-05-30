@@ -12,13 +12,8 @@ namespace MusicDirDiff {
         static string BackupDir = ConfigurationManager.AppSettings["backupdir"];
 
         static void Main() {
-
             //ログファイルを確認
-            if (!File.Exists(log)) {
-                Console.WriteLine("ログファイルが見つからないので、リセットします");
-                Settings.Default.Reset();
-                Console.WriteLine("リセットしました\n");
-            }
+            CheckLog();
 
             //DIRオブジェクトを生成
             Dir dir_org = new Dir("オリジナル", Mymusic);
@@ -33,6 +28,14 @@ namespace MusicDirDiff {
 
             Console.WriteLine("続行するには何かキーを押してください. . .");
             Console.ReadLine();
+        }
+
+        private static void CheckLog() {
+            if (!File.Exists(log)) {
+                Console.WriteLine("ログファイルが見つからないので、リセットします");
+                Settings.Default.Reset();
+                Console.WriteLine("リセットしました\n");
+            }
         }
     }
 
