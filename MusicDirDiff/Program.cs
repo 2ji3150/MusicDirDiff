@@ -10,6 +10,7 @@ namespace MusicDirDiff {
         public const string log = "Musig_Log.txt";
         static string Mymusic = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
         static string BackupDir = ConfigurationManager.AppSettings["backupdir"];
+        public static bool logexsist = File.Exists(log);
 
         static void Main() {
             //ログファイルを確認
@@ -31,7 +32,7 @@ namespace MusicDirDiff {
         }
 
         private static void CheckLog() {
-            if (!File.Exists(log)) {
+            if (!logexsist) {
                 Console.WriteLine("ログファイルが見つからないので、リセットします");
                 Settings.Default.Reset();
                 Console.WriteLine("リセットしました\n");
@@ -103,11 +104,14 @@ namespace MusicDirDiff {
         public void Update() {
             Console.WriteLine("ログファイルを更新中...");
 
+            //Append to text         
+            string content = $"{DateTime.Now} - {FileSizeHelpler.SizeSuffix(NewSize)} ({NewSize:N0} バイト)";
+            content = Program.logexsist ? $"\n{content}" : content;
+            File.AppendAllText(Program.log, content);
+
             //save to setting
             Settings.Default.LastSyncSize = NewSize;
             Settings.Default.Save();
-            //Append to text           
-            File.AppendAllText(Program.log, $"{DateTime.Now} - {FileSizeHelpler.SizeSuffix(NewSize)} ({NewSize:N0} バイト)");
 
             Console.WriteLine("ログファイルを更新しました...");
             Process.Start(Program.log);
