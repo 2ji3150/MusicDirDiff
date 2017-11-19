@@ -8,7 +8,7 @@ using System.Linq;
 namespace MusicDirDiff {
     class Program {
         public const string log = "Musig_Log.txt";
-        static string Mymusic = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+        static string Mymusic = @"C:\Users\Syun\Music\オリジナル";
         static string BackupDir = ConfigurationManager.AppSettings["backupdir"];
         public static bool logexsist = File.Exists(log);
 
