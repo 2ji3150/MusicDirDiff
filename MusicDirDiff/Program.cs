@@ -55,14 +55,11 @@ namespace MusicDirDiff {
             Console.WriteLine($"{name} パス : {path}");
 
             //パスの容量を計算
-            Caculatesize(name, path);
-        }
-
-        void Caculatesize(string name, string path) {
             DirectoryInfo di = new DirectoryInfo(path);
             Size = di.EnumerateFiles("*.*", SearchOption.AllDirectories).Sum(fi => fi.Length);
             Console.WriteLine($"{name}のサイズ : {Size}\n");
         }
+
     }
 
     public class SizeChecker {
